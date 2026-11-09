@@ -1,133 +1,102 @@
+# Cochera Los Ángeles — Sistema de Gestión y Control Interno
+
+Sistema de escritorio en **Java** para la administración, control vehicular, tarificación por bloques horarios, emisión de tickets y auditoría de caja de estacionamiento.
+
+---
+
 # 1. Identificación y formulación del problema
 
 ## 1.1 Situación problemática
 
-La planificación y el seguimiento de las actividades académicas requieren organizar diferentes responsabilidades, como los horarios de clases, las fechas de entrega, los proyectos, las tareas diarias y la asistencia. Cuando esta información se encuentra distribuida en diferentes medios o no se actualiza de manera organizada, puede resultar más difícil identificar las actividades pendientes, establecer prioridades y conocer el avance de los compromisos académicos.
+En el sector de servicios de estacionamiento y cocheras vehiculares (como la empresa *Representaciones e Inversiones Los Ángeles S.A.C.*), la gestión operativa tradicional basada en cuadernos manuales o registros informales enfrenta graves deficiencias:
 
-En este contexto, el estudiante es el principal usuario que necesita organizar su ciclo académico, planificar sus actividades semanales, registrar sus avances y controlar el cumplimiento de sus responsabilidades. Asimismo, los familiares que participan en su acompañamiento pueden necesitar información sobre su progreso, sus actividades pendientes y las situaciones que requieren atención, sin intervenir directamente en su planificación.
-
-El proyecto plantea un sistema que reúne estas funciones en un mismo entorno digital. El HTML contempla módulos de preparación del ciclo, cursos y horarios, agenda académica, organización semanal, proyectos académicos, trabajo diario, asistencia a clases, supervisión semanal y tableros de control. También considera diferentes perfiles de acceso, incluyendo el estudiante, la supervisora familiar y los perfiles de consulta y administración.
-
-Sin embargo, la existencia de estas funcionalidades en el diseño no permite afirmar todavía que los usuarios tengan dificultades concretas con sus métodos actuales. Para sustentar la situación problemática, se deberá observar cómo se organizan actualmente las actividades académicas, qué herramientas utilizan y qué dificultades encuentran al planificar y revisar sus avances.
+1. **Falta de exactitud en el cómputo de tiempos y tarifas:** El cobro depende de cálculos manuales de horas y minutos por parte del operario, generando cobros erróneos, pérdida de ingresos por omisión de horas extra o desacuerdos con los conductores respecto a las horas de tolerancia/gracia.
+2. **Vulnerabilidad en el control de caja y traslape de turnos:** Al no existir un mecanismo estricto de arqueo de caja (conteo ciego), surgen descuadres entre el dinero en efectivo recaudado y los registros de salida. Además, cuando un vehículo ingresa en el turno de un cajero y sale en el turno de otro, el control manual dificulta atribuir la recaudación de manera transparente.
+3. **Pérdida de trazabilidad de los vehículos dentro del local:** La imposibilidad de conocer en tiempo real la cantidad de vehículos estacionados, su tiempo de permanencia o alertas de vehículos abandonados (+12 o +24 horas) incrementa los riesgos de seguridad y desorden vehicular.
+4. **Emisión precaria o nula de comprobantes:** La ausencia de tickets estandarizados con identificadores únicos y códigos de barras dificulta la validación rápida de salida y propicia duplicidad de registros o evasión de pagos.
 
 ## 1.2 Formulación
 
-¿Cómo se puede mejorar la planificación y el seguimiento de las actividades académicas de un estudiante, considerando la organización de sus compromisos, el registro de sus avances y la supervisión de su progreso?
-
-Esta pregunta permite estudiar el problema sin dar por hecho que una aplicación específica es la única solución. El desarrollo del sistema será la propuesta que se evaluará durante el proyecto.
+> **¿De qué manera el desarrollo e implementación de un sistema de escritorio orientado a objetos (Java) optimiza el control de ingresos/salidas vehiculares, el cálculo tarifario y la conciliación de caja en la Cochera Los Ángeles?**
 
 ## 1.3 Diagrama de Ishikawa
 
-Problema central:
+A continuación se representa la relación causa-efecto de la problemática operativa central mediante el diagrama de Ishikawa (Causa-Efecto):
 
-> Dificultad para mantener una planificación y un seguimiento académico organizados e integrados.
+![Diagrama de Ishakawa](docs/Diagrama_de_Ishakawa.jpeg)
+---
 
-Las siguientes son categorías y posibles causas para investigar. No deben presentarse como causas confirmadas hasta que tengan evidencia.
+## 1.4 Diagrama de Clases
 
-|
-Categoría
+El diseño estructural del dominio y de los servicios del sistema se encuentra modelado en la siguiente arquitectura de clases:
 
-|
+![Diagrama de Clases](docs/Diagrama_de_clases.png)
 
-Posibles causas
-
-|
-| --- | --- |
-|
-
-Métodos
-
-|
-
-Falta de una rutina de planificación semanal; ausencia de un procedimiento uniforme para revisar pendientes.
-
-|
-|
-
-Información
-
-|
-
-Fechas de entrega, horarios y tareas posiblemente distribuidos en distintos medios; información que podría quedar desactualizada.
-
-|
-|
-
-Tecnología
-
-|
-
-Herramientas que no integran la planificación, el registro de avances y la supervisión en un solo espacio.
-
-|
-|
-
-Seguimiento
-
-|
-
-Falta de un registro continuo del progreso; dificultad para identificar compromisos atrasados o pendientes de revisión.
-
-|
-|
-
-Organización
-
-|
-
-Dificultad para priorizar actividades; responsabilidades académicas que coinciden en determinados periodos.
-
-|
-|
-
-Comunicación
-
-|
-
-Posible falta de coordinación entre el estudiante y los familiares respecto al progreso y las actividades que requieren atención.
-
-|
 
 ### Interpretación
 
-El análisis preliminar permite plantear que las dificultades de planificación y seguimiento podrían estar relacionadas con la distribución de la información, la organización de las actividades y la falta de continuidad en el registro de los avances. También se considera la necesidad de facilitar la comunicación entre el estudiante y los familiares que participan en su acompañamiento.
+El diagrama de clases modela el dominio del problema aplicando rigurosamente los principios de la **Programación Orientada a Objetos (POO)**:
 
-Estas posibles causas guardan relación con los módulos previstos en el sistema. La agenda académica y los cursos permiten centralizar información; la organización semanal y el trabajo diario apoyan la planificación y el registro de actividades; mientras que la asistencia, la supervisión y los tableros facilitan el seguimiento.
+1. **Herencia y Polimorfismo:**
+   * La clase abstracta `Usuario` centraliza credenciales, autenticación por hash SHA-256 y datos personales, especializándose en `Empleado` (habilitado para operar turnos y cajas) y `Administrador` (enfocado en auditoría, configuración de tarifas y corte global).
+   * La clase abstracta `TicketImprimible` define el método plantilla (*Template Method*) `generar()` subdividido en `encabezado()`, `cuerpo()` y `pie()`, especializándose polimórficamente en `TicketEntrada` y `TicketSalida`.
+   * La interfaz `Impresora` desacopla el destino físico de impresión (`ImpresoraVentana`, `ImpresoraTermicaConsola`, `ImpresoraArchivo`).
 
-No obstante, estas relaciones representan el enfoque funcional del proyecto, no una comprobación de las causas reales. Para completar el Ishikawa, el equipo deberá contrastar cada hipótesis con observaciones, entrevistas o revisión de los métodos actuales de organización.
+2. **Encapsulamiento y Reglas de Negocio:**
+   * `TurnoCaja`: Mantiene estados cerrados y abiertos, garantizando que el cierre solo ocurra mediante el método `cerrar()`, registrando el monto declarado por el usuario y contrastándolo contra el efectivo del sistema para calcular `diferenciaCaja`.
+   * `Tarifa`: Protege los valores monetarios impidiendo costos base o sobrecargos negativos mediante validaciones internas.
+   * `TicketCochera`: Encapsula los estados (`EN_CURSO`, `PAGADO`, `ANULADO`), controlando la asignación del correlativo único y hora de ingreso/salida.
 
-## 1.1 Antecedentes
+3. **Desacoplamiento y Relaciones:**
+   * La clase `Pago` asocia el `TicketCochera` con el `TurnoCaja` del empleado que realiza el cobro efectivo, resolviendo el problema de **traslape de turnos** (el ingreso puede registrarse en un turno y el cobro liquidarse en otro).
 
-El HTML proporcionado constituye el antecedente directo del proyecto, puesto que contiene una versión previa de un sistema de planificación y seguimiento académico. Esta versión contempla una interfaz organizada por módulos, acceso mediante perfiles y funcionalidades orientadas a la preparación del ciclo, la programación de actividades, el registro de avances y la supervisión familiar.
+---
 
-El proyecto no parte, por tanto, de una aplicación completamente nueva, sino de una solución existente que requiere revisión, adecuación y mejora para responder a los requerimientos establecidos para la entrega final.
+# 2. Objetivos y alcance
 
-Como parte de los antecedentes externos, se deberán investigar herramientas de planificación académica, calendarios digitales y sistemas de seguimiento de tareas que permitan identificar funcionalidades similares, sus características y las necesidades que atienden. La comparación deberá centrarse en aspectos como la organización de actividades, la gestión de fechas límite, el seguimiento del progreso y la colaboración o consulta de terceros.
+## 2.1 Objetivo general
 
-Pendiente: incorporar fuentes bibliográficas externas pertinentes, con autor, año y referencia completa en APA 7. El HTML por sí solo no proporciona referencias académicas externas para sustentar este apartado.
+Desarrollar un sistema de información de escritorio robusto y modular en **Java**, fundamentado en la Programación Orientada a Objetos y patrones de arquitectura por capas, que automatice el control de acceso vehicular, el cálculo dinámico de tarifas por bloques horarios, la emisión de tickets térmicos y la auditoría de turnos de caja en la **Cochera Los Ángeles**.
 
-## 1.5 Justificación
+## 2.2 Objetivos específicos
 
-El desarrollo y la mejora del Centro de Planificación y Seguimiento Académico se justifican por la necesidad de contar con una herramienta que permita reunir y organizar las principales actividades relacionadas con el ciclo académico de un estudiante. La propuesta busca integrar en un mismo entorno la planificación, el registro de tareas, la gestión de proyectos, el control de asistencia y la supervisión del progreso.
+1. **Automatizar el registro de ingresos (Check-in):** Capturar y formatear automáticamente la placa vehicular bajo estándar nacional (`ABC-123`), evitando duplicidad de ingresos activos y emitiendo un ticket de control con código de barras legible (`TK-AAAA-NNNNNN`).
+2. **Implementar el cálculo exacto de tarifas (Check-out):** Computar la permanencia vehicular basada en bloques de 12 horas, tolerancia de gracia de 30 minutos y liquidación fraccionada de horas adicionales con tope máximo, admitiendo múltiples métodos de pago (Efectivo, Yape, Plin) y cálculo de vuelto.
+3. **Garantizar el control y cuadre de caja:** Proporcionar a los empleados apertura y cierre de turno mediante arqueo ciego, calculando discrepancias en tiempo real entre el dinero contado y el flujo registrado en el sistema.
+4. **Monitorear en tiempo real la ocupación:** Visualizar vehículos dentro de las instalaciones mediante indicadores visuales de semáforo (`OK`, `POR VENCER`, `+12H`) para una oportuna gestión de espacios y detección de abandono.
+5. **Facilitar la administración y reportería:** Ofrecer a los administradores un panel de métricas diarias (KPIs), gráfico horario de recaudación, corte diario operativo a las 2:00 PM, auditoría de turnos anteriores, anulación justificada de tickets y exportación de data histórica a formato CSV/Excel.
 
-Desde el punto de vista funcional, el sistema busca facilitar la consulta de compromisos y la identificación de actividades pendientes, además de proporcionar un espacio para registrar avances y revisar el cumplimiento de las actividades planificadas. La incorporación de diferentes perfiles permite distinguir las funciones del estudiante, la supervisión familiar y la administración, de acuerdo con los permisos previstos en el proyecto.
+---
 
-Desde el punto de vista tecnológico, la existencia de una versión previa en HTML permite partir de una base desarrollada y concentrar el trabajo en revisar sus funcionalidades, corregir aspectos que no respondan a los requerimientos y mejorar la organización y la experiencia de uso. El uso de Git y GitHub durante el desarrollo también permitirá mantener un historial de modificaciones, organizar el trabajo y documentar las contribuciones del equipo.
+# 3. Arquitectura y Módulos del Sistema
 
-Se espera que la versión mejorada facilite la organización de las responsabilidades académicas y haga más accesible la información necesaria para el seguimiento. Estos beneficios deberán evaluarse mediante pruebas funcionales y la revisión de los criterios de aceptación establecidos en las historias de usuario.
+```
+src/cochera/
+├── modelo/      → Entidades del dominio (Usuario, Empleado, Administrador, Tarifa, TicketCochera, TurnoCaja, Pago)
+├── datos/       → BaseDatos en memoria concurrente y DatosIniciales de prueba
+├── servicio/    → Lógica de negocio (CalculadoraTarifa, CheckinServicio, CheckoutServicio, TurnoServicio, etc.)
+├── dto/         → Objetos de transferencia de datos (KPIs, reportes, auditoría)
+├── impresion/   → Generador de tickets para impresoras térmicas de 58 mm
+├── gui/         → Formularios NetBeans Swing (JFrame, JPanel, JDialog)
+├── vista/       → Menús e interfaz para consola de comandos (CLI)
+├── util/        → Herramientas de formateo (Dinero, Fechas, Placas, Reloj simulador)
+└── prueba/      → Pruebas de verificación de cálculo tarifario y flujo operativo
+```
 
-# 5. Objetivos y alcance
+## 3.1 Interfaces y Vistas del Sistema
 
-## 5.1 Objetivo general
+| Módulo / Pantalla | Vista de la interfaz |
+|---|---|
+| **Inicio de Sesión** | ![Login](docs/capturas/01_login.png) |
+| **Apertura de Turno** | ![Turno](docs/capturas/02_turno_de_caja.png) |
+| **Check-in (Entrada)** | ![Check-in](docs/capturas/03_check_in.png) |
+| **Ticket de Entrada** | ![Ticket Entrada](docs/capturas/04_ticket_de_ingreso.png) |
+| **Check-out (Cobro y Vuelto)** | ![Check-out](docs/capturas/05_check_out.png) |
+| **Ticket de Salida** | ![Ticket Salida](docs/capturas/06_ticket_de_salida.png) |
+| **Vehículos dentro en vivo** | ![Autos Dentro](docs/capturas/07_autos_dentro.png) |
+| **Arqueo y Cierre de Turno** | ![Arqueo](docs/capturas/09_arqueo_de_caja.png) |
+| **Resumen Diario y Gráficos (Admin)** | ![Resumen Admin](docs/capturas/10_admin_resumen.png) |
+| **Cierre Diario 2:00 PM** | ![Cierre 2 PM](docs/capturas/11_admin_cierre_2pm.png) |
+| **Auditoría de Turnos Pasados** | ![Auditoría Turnos](docs/capturas/12_admin_turnos.png) |
+| **Exportación a CSV / Excel** | ![Exportar](docs/capturas/15_admin_exportar.png) |
 
-Mejorar el Centro de Planificación y Seguimiento Académico mediante la revisión, adecuación e implementación de sus funcionalidades, con la finalidad de facilitar la organización de las actividades académicas, el registro de avances y la supervisión del progreso del estudiante.
-
-## 5.2 Objetivos específicos
-
-1. Analizar la estructura, las funcionalidades y el estado actual del proyecto HTML, identificando los componentes operativos, las limitaciones y los aspectos que requieren adecuación según los requerimientos del proyecto final.
-
-2. Diseñar e implementar las mejoras funcionales y de organización necesarias para integrar la planificación académica, la gestión de actividades, el registro de avances y el seguimiento del estudiante, de acuerdo con las historias de usuario y sus criterios de aceptación.
-
-3. Verificar el funcionamiento de las funcionalidades mejoradas mediante pruebas basadas en las historias de usuario, documentando los resultados obtenidos, los errores identificados y los aspectos pendientes de desarrollo.
-
-Nota sobre el alcance: estos objetivos son coherentes con el sistema descrito en el HTML. El alcance definitivo debe coincidir con las funcionalidades que realmente van a modificar y probar, no necesariamente con todos los módulos que aparecen en la interfaz.
