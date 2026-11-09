@@ -1,0 +1,96 @@
+classDiagram
+    direction TB
+    class Usuario {
+        <<abstract>>
+        -String id
+        -String email
+        -String passwordHash
+        -String nombreCompleto
+        +getRol() Rol*
+        +puedeOperarCaja() boolean*
+        +verificarPassword(String) boolean
+    }
+    class Empleado {
+        +getRol() Rol
+        +puedeOperarCaja() boolean
+    }
+    class Administrador {
+        +getRol() Rol
+        +puedeOperarCaja() boolean
+    }
+    class Tarifa {
+        -int id
+        -String tipoVehiculo
+        -double costoBase
+        -double sobrecargoHora
+        +actualizarPrecios(double, double)
+    }
+    class TurnoCaja {
+        -LocalDateTime fechaApertura
+        -LocalDateTime fechaCierre
+        -EstadoTurno estado
+        -Double efectivoDeclarado
+        -Double diferenciaCaja
+        +cerrar(fecha, declarado, efectivoSistema)
+        +estaAbierto() boolean
+    }
+    class TicketCochera {
+        -String placa
+        -String codigoBarras
+        -LocalDateTime horaEntrada
+        -LocalDateTime horaSalida
+        -EstadoTicket estado
+        +registrarSalida(LocalDateTime)
+        +anular()
+    }
+    class Pago {
+        -double montoTotal
+        -MetodoPago metodoPago
+        -LocalDateTime creadoEn
+        +cambiarMetodoPago(MetodoPago)
+    }
+    class TicketImprimible {
+        <<abstract>>
+        +generar() String
+        #encabezado() String*
+        #cuerpo() String*
+        #pie() String*
+    }
+    class TicketEntrada
+    class TicketSalida
+    class Impresora {
+        <<interface>>
+        +conectar()
+        +imprimir(String)
+    }
+    class ImpresoraTermicaConsola
+    class ImpresoraArchivo
+    class MenuBase {
+        <<abstract>>
+        +mostrar()
+        #getOpciones() List*
+        #atenderOpcion(int)*
+        #alSeleccionarVehiculo(TicketCochera)
+    }
+    class MenuEmpleado
+    class MenuAdministrador
+    class CocheraException
+    class ValidacionException
+    class AccesoDenegadoException
+
+    Usuario <|-- Empleado
+    Usuario <|-- Administrador
+    Empleado "1" --> "*" TurnoCaja : abre
+    TicketCochera "*" --> "1" Tarifa : tipo de vehiculo
+    Pago "1" --> "1" TicketCochera : liquida
+    Pago "*" --> "1" TurnoCaja : turno de quien cobra
+    TicketImprimible <|-- TicketEntrada
+    TicketImprimible <|-- TicketSalida
+    TicketEntrada --> TicketCochera
+    TicketSalida --> Pago
+    Impresora <|.. ImpresoraTermicaConsola
+    Impresora <|.. ImpresoraArchivo
+    MenuBase <|-- MenuEmpleado
+    MenuBase <|-- MenuAdministrador
+    CocheraException <|-- ValidacionException
+    CocheraException <|-- AccesoDenegadoException
