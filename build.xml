@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Script de NetBeans (Java with Ant). La logica de compilacion esta en nbproject/build-impl.xml -->
+<project name="CocheraLosAngeles" default="default" basedir=".">
+    <description>Builds, tests, and runs the project CocheraLosAngeles.</description>
+    <import file="nbproject/build-impl.xml"/>
+</project>

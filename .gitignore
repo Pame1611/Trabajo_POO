@@ -1,0 +1,10 @@
+# Compilación y binarios
+/build/
+/bin/
+/dist/
+
+# NetBeans archivos privados de usuario
+/nbproject/private/
+
+# Reportes generados en pruebas
+/reportes/*.csv
